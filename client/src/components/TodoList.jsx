@@ -24,8 +24,6 @@ import { PRIORITIES, CATEGORIES, DEFAULT_FORM_DATA } from '../constants';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-
 export function TodoList() {
   const [todos, setTodos] = useState([]);
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);

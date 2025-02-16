@@ -213,11 +213,7 @@ app.delete('/api/todos/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// API routes first
-app.use('/api', apiRoutes);
-app.use('/auth', authRoutes);
-
-// Then serve static files
+// Keep the static file serving
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client/dist')));
   
