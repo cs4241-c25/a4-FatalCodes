@@ -7,7 +7,7 @@
     "start": "node server.js",
     "build": "cd client && npm install && npm run build",
     "postinstall": "npm run build",
-    "test": "cross-env LIGHTHOUSE_MODE=true node server.js"
+    "dev": "cd client && npm run dev"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -19,6 +19,7 @@
     "@tabler/icons-react": "^3.30.0",
     "axios": "^1.7.9",
     "body-parser": "^1.20.2",
+    "connect-mongo": "^5.1.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "dotenv": "^16.0.3",
