@@ -222,13 +222,9 @@ app.delete('/api/todos/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// Update the static file serving
+// Move this up before other routes
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'client/build')));
-  
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build/index.html'));
-  });
+  app.use(express.static(path.join(__dirname, 'client/dist')));
 }
 
 // Add trust proxy setting
@@ -236,3 +232,10 @@ app.set('trust proxy', 1);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// This should be the last route
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/dist/index.html'));
+  });
+}
