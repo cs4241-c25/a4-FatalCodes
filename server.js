@@ -49,7 +49,7 @@ app.use(passport.session());
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: `${process.env.CLIENT_URL}/auth/github/callback`
+    callbackURL: "/auth/github/callback"
   },
   async function(accessToken, refreshToken, profile, done) {
     try {
@@ -89,10 +89,10 @@ app.get('/auth/github',
   passport.authenticate('github', { scope: [ 'user:email' ] }));
 
 app.get('/auth/github/callback', 
-  passport.authenticate('github', { failureRedirect: process.env.CLIENT_URL }),
-  function(req, res) {
-    res.redirect(process.env.CLIENT_URL + '/todos');
-  }
+  passport.authenticate('github', { 
+    failureRedirect: '/',
+    successRedirect: '/todos'
+  })
 );
 
 app.get('/api/auth/user', (req, res) => {
@@ -213,7 +213,7 @@ app.delete('/api/todos/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// Keep the static file serving
+// Static files and catch-all route LAST
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client/dist')));
   
