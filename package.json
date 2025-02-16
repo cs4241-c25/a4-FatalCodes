@@ -18,7 +18,7 @@
     "@material-tailwind/react": "^2.1.10",
     "@tabler/icons-react": "^3.30.0",
     "axios": "^1.7.9",
-    "body-parser": "^1.20.3",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "dotenv": "^16.0.3",

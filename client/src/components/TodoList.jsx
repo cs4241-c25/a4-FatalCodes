@@ -10,13 +10,10 @@ import {
   Table,
   Checkbox,
   ActionIcon,
-  Text,
   Badge
 } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
-import { notifications } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
-import axios from 'axios';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';

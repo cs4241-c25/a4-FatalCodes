@@ -49,7 +49,7 @@ app.use(passport.session());
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "/auth/github/callback"
+    callbackURL: `${process.env.CLIENT_URL}/auth/github/callback`
   },
   async function(accessToken, refreshToken, profile, done) {
     try {
@@ -213,7 +213,11 @@ app.delete('/api/todos/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// Serve static files from React build
+// API routes first
+app.use('/api', apiRoutes);
+app.use('/auth', authRoutes);
+
+// Then serve static files
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client/dist')));
   
