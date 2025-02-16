@@ -16,4 +16,5 @@ services:
       - key: SESSION_SECRET
         sync: false
       - key: CLIENT_URL
-        value: https://todo-app-xxxx.onrender.com 
+        value: https://todo-app-xxxx.onrender.com
+    nodeVersion: 18 
