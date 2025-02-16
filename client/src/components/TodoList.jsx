@@ -24,7 +24,6 @@ import { todoService } from '../services/api';
 import { showNotification } from '../utils/notifications';
 import { PRIORITIES, CATEGORIES, DEFAULT_FORM_DATA } from '../constants';
 
-
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
