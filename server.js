@@ -23,7 +23,6 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/todoApp',
 
 const app = express();
 
-// Move the production static file serving to the top
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client/dist')));
 }
@@ -44,7 +43,7 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 24 * 60 * 60 * 1000
   },
   proxy: true
 }));
@@ -122,8 +121,9 @@ app.get('/api/auth/logout', (req, res) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: 'Session destruction failed' });
-      }
-      res.clearCookie('connect.sid');
+      } 
+      res.clearCookie('connect.sid', { path: '/' });
+      res.clearCookie('github-oauth-state', { path: '/' });
       res.json({ success: true });
     });
   });
@@ -232,7 +232,7 @@ app.delete('/api/todos/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// Move the catch-all route to the bottom and remove the redirect
+
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/dist/index.html'));

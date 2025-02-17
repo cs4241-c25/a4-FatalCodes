@@ -27,7 +27,8 @@ export const AuthProvider = ({ children }) => {
     try {
       await authService.logout();
       setUser(null);
-      window.location.href = '/';  // Redirect to home after logout
+      // Redirect to GitHub logout first, which will then redirect back to our app
+      window.location.href = 'https://github.com/logout';
     } catch (error) {
       console.error('Logout failed:', error);
     }
