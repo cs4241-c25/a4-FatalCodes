@@ -43,8 +43,10 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
-  }
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  },
+  proxy: true
 }));
 
 app.use(passport.initialize());
@@ -54,7 +56,8 @@ app.use(passport.session());
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: 'https://a4-fatalcodes.onrender.com/auth/github/callback'
+    callbackURL: 'https://a4-fatalcodes.onrender.com/auth/github/callback',
+    proxy: true
   },
   async function(accessToken, refreshToken, profile, done) {
     try {
@@ -91,12 +94,17 @@ passport.deserializeUser(async (id, done) => {
 
 // Auth routes
 app.get('/auth/github',
-  passport.authenticate('github', { scope: [ 'user:email' ] }));
+  passport.authenticate('github', { 
+    scope: ['user:email'],
+    session: true 
+  })
+);
 
 app.get('/auth/github/callback', 
   passport.authenticate('github', { 
     failureRedirect: '/',
-    successRedirect: '/todos'
+    successRedirect: '/todos',
+    session: true
   })
 );
 
