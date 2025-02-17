@@ -1,4 +1,4 @@
-import { Container, Paper, Title, Text, Button, Stack } from '@mantine/core';
+import { Container, Paper, Title, Text, Button, Stack, Box } from '@mantine/core';
 import { IconBrandGithub } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -15,28 +15,47 @@ export function HomePage() {
   }, [user, navigate]);
 
   const handleGitHubLogin = () => {
-    window.location.href = '/auth/github';  // Use relative URL
+    window.location.href = '/auth/github';
   };
 
   return (
-    <Container size="md" py="xl">
-      <Paper shadow="lg" p="xl" radius="md">
-        <Stack align="center" spacing="xl">
-          <Title order={1} align="center">
-            Welcome to Matthew&apos;s Todo App
-          </Title>
-          <Text size="lg" align="center" color="dimmed" maw={600}>
-            Sign in with GitHub to start organizing your tasks
-          </Text>
-          <Button
-            size="lg"
-            leftIcon={<IconBrandGithub size={24} />}
-            onClick={handleGitHubLogin}
-          >
-            Continue with GitHub
-          </Button>
-        </Stack>
-      </Paper>
-    </Container>
+    <Box 
+      sx={(theme) => ({
+        height: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: theme.colors.gray[0]
+      })}
+    >
+      <Container size="xs">
+        <Paper 
+          shadow="md" 
+          p="xl" 
+          radius="md"
+          sx={{
+            backgroundColor: 'white',
+            textAlign: 'center'
+          }}
+        >
+          <Stack spacing="xl">
+            <Title order={1}>
+              Welcome to Todo App
+            </Title>
+            <Text size="lg" color="dimmed">
+              Sign in with GitHub to start organizing your tasks
+            </Text>
+            <Button
+              size="lg"
+              leftIcon={<IconBrandGithub size={24} />}
+              onClick={handleGitHubLogin}
+              fullWidth
+            >
+              Continue with GitHub
+            </Button>
+          </Stack>
+        </Paper>
+      </Container>
+    </Box>
   );
 } 
