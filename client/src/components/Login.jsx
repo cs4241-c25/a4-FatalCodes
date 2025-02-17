@@ -22,7 +22,7 @@ export function Login() {
     <Container size="xs" mt="xl">
       <Paper shadow="md" p="xl" radius="md">
         <Title order={2} align="center" mb="md">
-          Welcome to Todo App
+          Welcome to Matthew's Todo App
         </Title>
         <Text align="center" mb="xl" c="dimmed">
           Please sign in with GitHub to continue
