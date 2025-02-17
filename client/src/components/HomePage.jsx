@@ -15,7 +15,12 @@ export function HomePage() {
   }, [user, navigate]);
 
   const handleGitHubLogin = () => {
-    window.location.href = 'http://localhost:3000/auth/github';
+    // Use the current window location to determine the base URL
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? window.location.origin
+      : 'http://localhost:3000';
+      
+    window.location.href = `${baseUrl}/auth/github`;
   };
 
   return (
