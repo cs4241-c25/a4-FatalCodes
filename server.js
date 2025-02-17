@@ -54,7 +54,9 @@ app.use(passport.session());
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "/auth/github/callback"
+    callbackURL: process.env.NODE_ENV === 'production' 
+      ? 'https://a4-fatalcodes.onrender.com/auth/github/callback'
+      : '/auth/github/callback'
   },
   async function(accessToken, refreshToken, profile, done) {
     try {
@@ -94,10 +96,10 @@ app.get('/auth/github',
   passport.authenticate('github', { scope: [ 'user:email' ] }));
 
 app.get('/auth/github/callback', 
-  passport.authenticate('github', { failureRedirect: process.env.CLIENT_URL }),
-  function(req, res) {
-    res.redirect(process.env.CLIENT_URL + '/todos');
-  }
+  passport.authenticate('github', { 
+    failureRedirect: '/',
+    successRedirect: '/todos'
+  })
 );
 
 app.get('/api/auth/user', (req, res) => {
@@ -142,10 +144,6 @@ function isAuthenticated(req, res, next) {
   if (req.isAuthenticated() || process.env.LIGHTHOUSE_MODE === 'true') return next();
   res.status(401).json({ error: 'Not authenticated' });
 }
-
-app.get('/todos', isAuthenticated, (req, res) => {
-  res.redirect(process.env.CLIENT_URL + '/todos');
-});
 
 // API Endpoints
 
