@@ -114,8 +114,18 @@ app.get('/api/auth/user', (req, res) => {
 
 app.get('/api/auth/logout', (req, res) => {
   req.logout((err) => {
-    if (err) console.error(err);
-    res.json({ success: true });
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Logout failed' });
+    }
+    req.session.destroy((err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Session destruction failed' });
+      }
+      res.clearCookie('connect.sid');
+      res.json({ success: true });
+    });
   });
 });
 

@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import { authService } from '../services/api';
 
@@ -26,10 +25,9 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.get('http://localhost:3000/api/auth/logout', {
-        withCredentials: true
-      });
+      await authService.logout();
       setUser(null);
+      window.location.href = '/';  // Redirect to home after logout
     } catch (error) {
       console.error('Logout failed:', error);
     }
