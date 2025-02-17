@@ -121,9 +121,20 @@ app.get('/api/auth/logout', (req, res) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: 'Session destruction failed' });
-      } 
-      res.clearCookie('connect.sid', { path: '/' });
-      res.clearCookie('github-oauth-state', { path: '/' });
+      }
+      // Clear all auth-related cookies with appropriate options
+      res.clearCookie('connect.sid', { 
+        path: '/',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+      });
+      res.clearCookie('github-oauth-state', { 
+        path: '/',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+      });
       res.json({ success: true });
     });
   });
