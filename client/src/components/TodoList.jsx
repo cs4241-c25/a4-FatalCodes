@@ -10,10 +10,13 @@ import {
   Table,
   Checkbox,
   ActionIcon,
+  Text,
   Badge
 } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
+import { notifications } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
+import axios from 'axios';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
@@ -21,8 +24,11 @@ import { todoService } from '../services/api';
 import { showNotification } from '../utils/notifications';
 import { PRIORITIES, CATEGORIES, DEFAULT_FORM_DATA } from '../constants';
 
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export function TodoList() {
   const [todos, setTodos] = useState([]);

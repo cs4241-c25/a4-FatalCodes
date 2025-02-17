@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const MongoStore = require('connect-mongo');
 require('dotenv').config();
 
 const User = require('./models/User');
@@ -37,14 +36,9 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'your_session_secret',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
-    ttl: 24 * 60 * 60 // 1 day
-  }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
   }
 }));
 
@@ -95,15 +89,13 @@ app.get('/auth/github',
   passport.authenticate('github', { scope: [ 'user:email' ] }));
 
 app.get('/auth/github/callback', 
-  passport.authenticate('github', { failureRedirect: '/' }),
+  passport.authenticate('github', { failureRedirect: process.env.CLIENT_URL }),
   function(req, res) {
-    console.log('Auth successful, user:', req.user);
-    res.redirect(`${process.env.CLIENT_URL}/todos`);
+    res.redirect(process.env.CLIENT_URL + '/todos');
   }
 );
 
 app.get('/api/auth/user', (req, res) => {
-  console.log('Current user:', req.user); // Add logging
   res.json(req.user || null);
 });
 
@@ -147,8 +139,7 @@ function isAuthenticated(req, res, next) {
 }
 
 app.get('/todos', isAuthenticated, (req, res) => {
-  // Instead of redirecting, serve the React app
-  res.sendFile(path.join(__dirname, 'client/dist/index.html'));
+  res.redirect(process.env.CLIENT_URL + '/todos');
 });
 
 // API Endpoints
@@ -222,20 +213,20 @@ app.delete('/api/todos/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// Move this up before other routes
+// Catch-all route to redirect to React frontend
+app.get('*', (req, res) => {
+  res.redirect(process.env.CLIENT_URL || 'http://localhost:5173');
+});
+
 if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the React app
   app.use(express.static(path.join(__dirname, 'client/dist')));
-}
 
-// Add trust proxy setting
-app.set('trust proxy', 1);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-// This should be the last route
-if (process.env.NODE_ENV === 'production') {
+  // Handle React routing, return all requests to React app
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/dist/index.html'));
   });
 }
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
