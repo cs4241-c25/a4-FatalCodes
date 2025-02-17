@@ -23,6 +23,11 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/todoApp',
 
 const app = express();
 
+// Move the production static file serving to the top
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/dist')));
+}
+
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:5173',
   credentials: true
@@ -213,18 +218,14 @@ app.delete('/api/todos/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// Catch-all route to redirect to React frontend
-app.get('*', (req, res) => {
-  res.redirect(process.env.CLIENT_URL || 'http://localhost:5173');
-});
-
+// Move the catch-all route to the bottom and remove the redirect
 if (process.env.NODE_ENV === 'production') {
-  // Serve static files from the React app
-  app.use(express.static(path.join(__dirname, 'client/dist')));
-
-  // Handle React routing, return all requests to React app
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/dist/index.html'));
+  });
+} else {
+  app.get('*', (req, res) => {
+    res.redirect(process.env.CLIENT_URL || 'http://localhost:5173');
   });
 }
 
