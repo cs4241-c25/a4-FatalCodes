@@ -30,19 +30,36 @@ export function HomePage() {
     >
       <Container size="xs">
         <Paper 
-          shadow="md" 
-          p="xl" 
+          shadow="xl" 
+          p={30} 
           radius="md"
-          sx={{
+          sx={(theme) => ({
             backgroundColor: 'white',
-            textAlign: 'center'
-          }}
+            textAlign: 'center',
+            border: `1px solid ${theme.colors.gray[2]}`,
+            transition: 'transform 150ms ease, box-shadow 150ms ease',
+            '&:hover': {
+              transform: 'scale(1.01)',
+              boxShadow: theme.shadows.lg
+            }
+          })}
         >
-          <Stack spacing="xl">
-            <Title order={1}>
-              Welcome to Todo App
+          <Stack spacing="lg">
+            <Title 
+              order={1} 
+              sx={(theme) => ({
+                color: theme.colors.dark[8],
+                fontSize: '2rem',
+                fontWeight: 600
+              })}
+            >
+              Welcome to Matthew&apos;s Todo App
             </Title>
-            <Text size="lg" color="dimmed">
+            <Text 
+              size="lg" 
+              color="dimmed"
+              sx={{ lineHeight: 1.6 }}
+            >
               Sign in with GitHub to start organizing your tasks
             </Text>
             <Button
@@ -50,6 +67,14 @@ export function HomePage() {
               leftIcon={<IconBrandGithub size={24} />}
               onClick={handleGitHubLogin}
               fullWidth
+              variant="filled"
+              sx={(theme) => ({
+                marginTop: theme.spacing.md,
+                transition: 'transform 150ms ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)'
+                }
+              })}
             >
               Continue with GitHub
             </Button>
