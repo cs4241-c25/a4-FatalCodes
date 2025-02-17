@@ -54,9 +54,9 @@ app.use(passport.session());
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.NODE_ENV === 'production' 
-      ? 'https://a4-fatalcodes.onrender.com/auth/github/callback'
-      : '/auth/github/callback'
+    callbackURL: process.env.NODE_ENV === 'production'
+      ? `${process.env.CLIENT_URL}/auth/github/callback`
+      : 'http://localhost:3000/auth/github/callback'
   },
   async function(accessToken, refreshToken, profile, done) {
     try {
@@ -97,8 +97,8 @@ app.get('/auth/github',
 
 app.get('/auth/github/callback', 
   passport.authenticate('github', { 
-    failureRedirect: '/',
-    successRedirect: '/todos'
+    failureRedirect: process.env.NODE_ENV === 'production' ? `${process.env.CLIENT_URL}/` : 'http://localhost:5173/',
+    successRedirect: process.env.NODE_ENV === 'production' ? `${process.env.CLIENT_URL}/todos` : 'http://localhost:5173/todos'
   })
 );
 
