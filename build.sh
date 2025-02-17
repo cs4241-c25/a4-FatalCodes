@@ -1,12 +1,14 @@
 #!/bin/bash
-# Install dependencies
+# Install root dependencies
 npm install
 
-# Build client
+# Install client dependencies including dev dependencies
 cd client
-npm install
+npm install --include=dev
+
+# Build the client
 npm run build
+
 cd ..
 
-# Start server
-npm start 
+# Start is handled by the start command in package.json 
